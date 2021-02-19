@@ -1,0 +1,59 @@
+﻿@page "/"
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Kosmonauti.Data
+
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h1>Prehled kosmonautu</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th><a href="@newkosmonautRoute">[+]</a></th>
+            <th>Jmeno</th>
+            <th>Prijmeni</th>
+            <th>Datum narozeni</th>
+            @if (true)
+            {
+                <th>Akce</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if(kosmonauti.Count() > 0)
+        {
+            @foreach(var kosmonaut in kosmonauti)
+            {
+                <tr>
+                    <td>@kosmonaut.Id</td>
+                    <td>@kosmonaut.Jmeno</td>
+                    <td>@kosmonaut.Prijmeni</td>
+                    <td>1. 1. 1970</td>
+                    <td>
+                        <button class="btn btn-sm btn-info oi oi-info" @onclick="() => KosmonautDetail(kosmonaut.Id)"></button>
+                        <button class="btn btn-sm btn-light oi oi-wrench"></button>
+                        <button class="btn btn-sm btn-outline-danger oi oi-delete"></button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code
+{
+    IEnumerable<KosmonautDTO> kosmonauti = new List<KosmonautDTO>();
+    string newkosmonautRoute = @"/newkosmonaut";
+
+    protected override async Task OnInitializedAsync()
+    {
+        kosmonauti = await Http.GetFromJsonAsync<KosmonautDTO[]>(@"/api/kosmonaut");
+    }
+
+    protected void KosmonautDetail(int id)
+    {
+        NavigationManager.NavigateTo(@$"/kosmonaut/{id}");
+    }
+}

@@ -1,0 +1,36 @@
+﻿@page "/kosmonaut/{Id:int}"
+
+@using Data;
+@using System.Net.Http.Json 
+@inject HttpClient Http 
+
+<h3>Kosmonaut c. @Id</h3>
+
+Prehled detailu kosmonauta @Id
+
+<div class="container mx-5 my-5">
+    <p class="p-sm-2">
+        <h3>@detail.Jmeno @detail.Prijmeni (datum narozeni)</h3>
+        @if(detail.Superschopnosti != null)
+        {
+            <ul>
+                @foreach(var s in detail.Superschopnosti)
+                {
+                    <li>@s</li>
+                }
+            </ul>
+        }
+    </p>
+</div> 
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    KosmonautDTO detail = new KosmonautDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        detail = await Http.GetFromJsonAsync<KosmonautDTO>(@$"/api/kosmonaut/{Id}");
+    }
+}

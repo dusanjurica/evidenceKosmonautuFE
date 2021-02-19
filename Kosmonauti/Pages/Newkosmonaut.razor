@@ -1,0 +1,43 @@
+﻿@page "/newkosmonaut"
+
+@using Kosmonauti.Data
+@using Kosmonauti.Services
+
+@inject Services.KosmonautService _kosmonautSvc
+
+<h3>newkosmonaut</h3>
+
+<EditForm Model="@novyKosm" OnValidSubmit="@validSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        Jmeno : <InputText id="Jmeno" @bind-Value="novyKosm.Jmeno" class="form-control" />
+        Prijmeni : <InputText id="Prijmeni" @bind-Value="novyKosm.Prijmeni" class="form-control" />
+        Datum narozeni : <InputDate id="DatumNar" @bind-Value="novyKosm.DatumNar" class="form-control" />
+    </div>
+
+    <div class="form-group col-md-3">
+        <label for="superschopnostiSelect">Priradte kosmonautovi schopnosti</label>
+        <select multiple class="form-control" id="superschopnostiSelect">
+            @for (int i = 0; i < 5; i++)
+            {
+                <option>@i</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+</EditForm>
+
+@code {
+    KosmonautDTO novyKosm = new KosmonautDTO();
+
+    IList<int> vybraneId = new List<int>();
+    IList<string> vybraneIdString = new List<string>();
+
+    private Task validSubmit()
+    {
+        return Task.FromResult(novyKosm);
+    }
+}
